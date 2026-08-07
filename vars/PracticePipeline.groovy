@@ -20,6 +20,8 @@ def call(Map config) {
                         sonarQube.init(config)
                         execute = new Execute()
                         execute.init(config)
+                        notification = new Notification()
+                        notification.init(config)
                         // NOTE: execute is deliberately NOT initialized here,
                         // just like in the real MPL_Maven_Weblogic.groovy.
                         // Try running this, see it fail/go UNSTABLE, then
@@ -67,18 +69,21 @@ def call(Map config) {
         }
 
         post {
-            success {
-                echo "Pipeline SUCCESS"
-            }
-            unstable {
-                echo "Pipeline UNSTABLE — check which stage went yellow"
-            }
-            failure {
-                echo "Pipeline FAILED"
-            }
-            always {
-                echo "Pipeline finished with result: ${currentBuild.result}"
-            }
+    success {
+        script {
+            notification.sendSuccessEmailToTriggerUserOrCommitAuthor()
+        }
+    }
+    failure {
+        script {
+            notification.sendFailEmailToTriggerUserOrCommitAuthor()
+        }
+    }
+    always {
+        script {
+            notification.updateBranchAndParentJobDescription('Practice lab pipeline ran')
+        }
+    }
         }
     }
 }
