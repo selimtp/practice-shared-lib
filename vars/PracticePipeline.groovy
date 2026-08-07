@@ -18,6 +18,8 @@ def call(Map config) {
                         maven.init(config)
                         sonarQube = new SonarQube()
                         sonarQube.init(config)
+                        Execute execute = new Execute()
+                        execute.init(config)
                         // NOTE: execute is deliberately NOT initialized here,
                         // just like in the real MPL_Maven_Weblogic.groovy.
                         // Try running this, see it fail/go UNSTABLE, then
