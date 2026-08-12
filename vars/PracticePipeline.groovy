@@ -19,7 +19,7 @@ def call(Map config) {
                         sonarQube = new SonarQube()
                         sonarQube.init(config)
                         execute = new Execute()
-                        //execute.init(config)
+                        execute.init(config)
                         notification = new Notification()
                         notification.init(config)
                         
