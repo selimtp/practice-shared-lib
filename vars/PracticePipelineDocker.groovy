@@ -7,7 +7,7 @@ def call(Map config) {
             stage('Init') {
                 steps {
                     script {
-                        def dockerToolInstance = new DockerTool()
+                        dockerToolInstance = new DockerTool()
                         dockerToolInstance.init(config)
                     }
                 }
