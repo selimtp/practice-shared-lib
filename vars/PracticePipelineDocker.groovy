@@ -7,8 +7,8 @@ def call(Map config) {
             stage('Init') {
                 steps {
                     script {
-                        dockerTool = new DockerTool()
-                        dockerTool.init(config)
+                        def dockerToolInstance = new DockerTool()
+                        dockerToolInstance.init(config)
                     }
                 }
             }
@@ -16,7 +16,7 @@ def call(Map config) {
             stage('Build and Push Image') {
                 steps {
                     script {
-                        dockerTool.buildAndPush()
+                        dockerToolInstance.buildAndPush()
                     }
                 }
             }
