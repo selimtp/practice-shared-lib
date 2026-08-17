@@ -22,7 +22,15 @@ def call(Map config) {
                         execute.init(config)
                         notification = new Notification()
                         notification.init(config)
-                        
+                        echo " Looking for changes in files"
+                        def changedFilesRaw = sh(script: "git diff-tree --no-commit-id --name-status -r HEAD || true", returnStdout: true).trim()
+                        println "Changes:\n${changedFilesRaw}"
+                        if (changedFilesRaw && !changedFilesRaw.contains('.java') && changedFilesRaw.contains('.md')) {
+                            env.SKIP_BUILD_AND_TEST = 'true'
+                            echo "No Java code changes detected. Skipping build and test stages. Only documentation changes detected."
+                        } else {
+                            env.SKIP_BUILD_AND_TEST = 'false'
+                        }
                     }
                 }
             }
@@ -30,7 +38,7 @@ def call(Map config) {
             stage('Build') {
                 when {
                     beforeAgent true
-                    expression { GlobalConstants.BUILD_BRANCH_LIST.any { env.BRANCH_NAME.contains(it) } }
+                    expression { GlobalConstants.BUILD_BRANCH_LIST.any { env.BRANCH_NAME.contains(it) } && env.SKIP_BUILD_AND_TEST != 'true' }
                 }
                 steps {
                     script {
