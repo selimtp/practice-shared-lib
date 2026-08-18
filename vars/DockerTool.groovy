@@ -21,3 +21,16 @@ def buildAndPush() {
     
     println "[DockerTool] Pushed image: ${imageName}"
 }
+
+def deployFromRegistry() {
+    def imageName = "${config.dockerHubUsername}/${config.imageName}:latest" // Veya spesifik bir BUILD_NUMBER
+    def containerName = "${config.imageName}-container"
+    echo "Image pulling from docker registry: ${imageName}"
+    sh "docker pull ${imageName}"
+
+    echo "Old container removal if exists: ${containerName}"
+    sh "docker rm -f ${containerName} || true"
+
+    echo "Deploying new container from image: ${imageName}"
+    sh "docker run -d -p 5000:5000 --name ${containerName} ${imageName}"
+}

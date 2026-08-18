@@ -20,6 +20,15 @@ def call(Map config) {
                     }
                 }
             }
+            {
+                stage('Deploy from Registry') {
+                    steps {
+                        script {
+                            dockerToolInstance.deployFromRegistry()
+                        }
+                    }
+                }
+            }
         }
 
         post {
