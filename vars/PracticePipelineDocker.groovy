@@ -16,7 +16,7 @@ def call(Map config) {
             stage('Build and Push Image') {
                 steps {
                     script {
-                        dockerToolInstance.buildAndPush()
+                        dockerToolInstance.buildAndPush(config)
                     }
                 }
             }
@@ -24,7 +24,7 @@ def call(Map config) {
                 stage('Deploy from Registry') {
                     steps {
                         script {
-                            dockerToolInstance.deployFromRegistry()
+                            dockerToolInstance.deployFromRegistry(config)
                         }
                     }
                 }
