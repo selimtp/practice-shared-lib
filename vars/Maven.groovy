@@ -7,7 +7,6 @@ def init(Map cfg) {
 
 def build() {
     def mavenBuildCommand = config.buildCommand ?: "mvn clean package -U"
-    println "[Maven] Pretending to run: ${mavenBuildCommand}"
-    sh "echo 'FAKE BUILD RUNNING: ${mavenBuildCommand}'"
-    sh "echo 'BUILD SUCCESSFUL (simulated)'"
+    println "[Maven] Running: ${mavenBuildCommand}"
+    sh "${mavenBuildCommand}"
 }
