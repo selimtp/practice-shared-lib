@@ -4,6 +4,11 @@ def init(Map cfg) {
     this.config = cfg
     println "[SonarQube] initialized with config: ${config}"
 }
+def mvn() {
+    withSonarQubeEnv('sonarqube-lab') {
+        sh "mvn clean verify sonar:sonar -Dsonar.projectKey=${config.sonarProjectKey}"
+    }
+}
 
 private boolean isSonarScanEnabled(Map config) {
     if (!GlobalConstants.ENABLE_SONAR) {
@@ -16,8 +21,13 @@ private boolean isSonarScanEnabled(Map config) {
     }
     return true
 }
-
-def scan() {
-    println "[SonarQube] Pretending to run sonar:sonar scan..."
-    sh "echo 'FAKE SONAR SCAN for project ${config.appServiceName}'"
+def qualityGate() {
+    timeout(time: 3, unit: 'MINUTES') {
+        def qGate = waitForQualityGate()
+        if (qGate.status != 'OK') {
+            error "Quality gate başarısız: ${qGate.status}"
+        }
+        println "[SonarQubeTool] Quality gate PASSED"
+    }
 }
+

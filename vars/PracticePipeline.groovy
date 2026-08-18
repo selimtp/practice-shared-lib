@@ -52,16 +52,34 @@ def call(Map config) {
             stage('SonarQube Scan') {
                 when {
                     beforeAgent true
-                    expression { sonarQube.isSonarScanEnabled(config) }
+                    expression { GlobalConstants.SONAR_SCAN_BRANCH_LIST.any { env.BRANCH_NAME.contains(it) } && env.SKIP_BUILD_AND_TEST != 'true' }
                 }
                 steps {
                     script {
-                        sonarQube.scan()
+                        echo "SonarQube scan started"
+                        sonarQube.mvn()
+                        echo "SonarQube scan finished"
+                    }
+                }
+            }
+            stage('SonarQube Quality Gate') {
+                when {
+                    beforeAgent true
+                    expression { GlobalConstants.SONAR_SCAN_BRANCH_LIST.any { env.BRANCH_NAME.contains(it) } && env.SKIP_BUILD_AND_TEST != 'true' }
+                }
+                steps {
+                    script {
+                        echo "Waiting for SonarQube Quality Gate result"
+                        sonarQube.qualityGate()
+                        echo "SonarQube Quality Gate passed"
                     }
                 }
             }
 
             stage('Integration Test') {
+                when {
+                    expression { env.SKIP_BUILD_AND_TEST != 'true' }
+                }
                 steps {
                     script {
                         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
