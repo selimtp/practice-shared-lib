@@ -5,8 +5,11 @@ def init(Map cfg) {
     println "[SonarQube] initialized with config: ${config}"
 }
 def mvn() {
-    withSonarQubeEnv('sonarqube-lab') {
-        sh "mvn clean verify sonar:sonar -Dsonar.projectKey=${config.sonarProjectKey} -Dsonar.exclusions=${config.exclusions ?: ''}"
+    withEnv(["JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64",
+        "PATH=/usr/lib/jvm/java-21-openjdk-amd64/bin:${env.PATH}"]) {
+        withSonarQubeEnv('sonarqube-lab') {
+            sh "mvn clean verify sonar:sonar -Dsonar.projectKey=${config.sonarProjectKey} -Dsonar.exclusions=${config.exclusions ?: ''}"
+        }
     }
 }
 
