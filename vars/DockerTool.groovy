@@ -23,7 +23,7 @@ def buildAndPush() {
 }
 
 def deployFromRegistry() {
-    def imageName = "${config.dockerHubUsername}/${config.imageName}:latest" // Veya spesifik bir BUILD_NUMBER
+    def imageName = "${config.dockerHubUsername}/${config.imageName}:${env.BUILD_NUMBER}"
     def containerName = "${config.imageName}-container"
     echo "Image pulling from docker registry: ${imageName}"
     sh "docker pull ${imageName}"
