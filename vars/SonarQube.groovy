@@ -6,7 +6,7 @@ def init(Map cfg) {
 }
 def mvn() {
     withSonarQubeEnv('sonarqube-lab') {
-        sh "mvn clean verify sonar:sonar -Dsonar.projectKey=${config.sonarProjectKey}"
+        sh "mvn clean verify sonar:sonar -Dsonar.projectKey=${config.sonarProjectKey} -Dsonar.exclusions=${config.exclusions ?: ''}"
     }
 }
 
