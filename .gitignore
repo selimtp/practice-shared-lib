@@ -1,0 +1,20 @@
+# Groovy/Java compiled output, in case classes/ or src/main/groovy get compiled locally
+*.class
+build/
+target/
+
+# Logs
+*.log
+
+# IDE
+.idea/
+*.iml
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+
+# OS
+.DS_Store
+Thumbs.db
